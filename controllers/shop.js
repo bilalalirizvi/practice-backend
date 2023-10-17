@@ -9,9 +9,8 @@ const throwError = (res) => {
 exports.createShop = async (req, res) => {
   const { name, email, phoneNumber, address } = req.body;
   try {
-    let isShop = null;
-    if (name) {
-      isShop = await Shop.findOne({ name });
+    let isShop = await Shop.findOne({ name });
+    if (isShop) {
       return res.status(400).json({
         success: false,
         message: "Shop already exists",
@@ -45,7 +44,7 @@ exports.getShop = async (req, res) => {
         { address: { $regex: search, $options: "i" } },
       ],
     };
-    const shopCount = await User.find(searchBy).count();
+    const shopCount = await Shop.find(searchBy).count();
     const Shops = await Shop.find(searchBy)
       .skip(perPage * (page - 1))
       .limit(perPage)

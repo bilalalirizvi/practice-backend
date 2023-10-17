@@ -21,6 +21,7 @@ app.get("/", (_, res) =>
 // ROUTES
 app.use("/user", require("./routes/user"));
 app.use("/shop", require("./routes/shop"));
+app.use("/product", require("./routes/product"));
 
 app.listen(PORT, () => {
   console.log(`Server is Connected with port ${PORT}`);
