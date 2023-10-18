@@ -9,9 +9,8 @@ const throwError = (res) => {
 exports.createUser = async (req, res) => {
   const { firstName, lastName, email, phoneNumber } = req.body;
   try {
-    let isUser = null;
-    if (email) {
-      isUser = await User.findOne({ email: email?.toLowerCase() });
+    let isUser = await User.findOne({ email: email?.toLowerCase() });
+    if (isUser) {
       return res.status(400).json({
         success: false,
         message: "User already exists",
@@ -76,22 +75,24 @@ exports.getSingleUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const { id } = req.params;
-  const { firstName, lastName, email, phoneNumber } = req.body;
+  // const { id } = req.params;
+  const { firstName, lastName, email, phoneNumber, _id } = req.body;
   try {
-    const user = await User.find({ _id: id });
-    if (user) {
-      const updateFields = { firstName, lastName, email, phoneNumber };
-      await User.findOneAndUpdate({ _id: id }, { ...updateFields });
+    // const user = await User.find({ _id: id });
+    // if (user) {
+    const updateFields = { firstName, lastName, email, phoneNumber };
+    await User.findByIdAndUpdate(_id, updateFields).then(() => {
       return res
         .status(200)
         .json({ success: true, message: "User updated successfully" });
-    } else {
-      return res
-        .status(200)
-        .json({ success: false, message: "User not found" });
-    }
+    });
+    // } else {
+    //   return res
+    //     .status(200)
+    //     .json({ success: false, message: "User not found" });
+    // }
   } catch (err) {
+    console.log("🚀 ~ file: user.js:94 ~ exports.updateUser= ~ err:", err);
     return throwError(res);
   }
 };
