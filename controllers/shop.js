@@ -36,6 +36,10 @@ exports.createShop = async (req, res) => {
 
 exports.getShop = async (req, res) => {
   const { search, page, perPage } = req?.body;
+  console.log(
+    "🚀 ~ file: shop.js:39 ~ exports.getShop= ~ req?.body:",
+    req?.body
+  );
   try {
     const searchBy = {
       $or: [
@@ -75,21 +79,27 @@ exports.getSingleShop = async (req, res) => {
 };
 
 exports.updateShop = async (req, res) => {
-  const { id } = req.params;
-  const { name, email, phoneNumber, address } = req.body;
+  const { name, email, phoneNumber, address, _id } = req.body;
   try {
-    const shop = await Shop.find({ _id: id });
-    if (shop) {
-      const updateFields = { name, email, phoneNumber, address };
-      await Shop.findOneAndUpdate({ _id: id }, { ...updateFields });
+    const updateFields = { name, email, phoneNumber, address };
+    await Shop.findByIdAndUpdate(_id, updateFields).then(() => {
       return res
         .status(200)
-        .json({ success: true, message: "Shop updated successfully" });
-    } else {
+        .json({ success: true, message: "Store updated successfully" });
+    });
+  } catch (err) {
+    return throwError(res);
+  }
+};
+
+exports.deleteShop = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Shop.findByIdAndDelete(id).then(() => {
       return res
         .status(200)
-        .json({ success: false, message: "Shop not found" });
-    }
+        .json({ success: true, message: "Shop Deleted successfully" });
+    });
   } catch (err) {
     return throwError(res);
   }
