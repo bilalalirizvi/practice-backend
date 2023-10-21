@@ -19,6 +19,10 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    store: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

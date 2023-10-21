@@ -7,7 +7,7 @@ const throwError = (res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { firstName, lastName, email, phoneNumber } = req.body;
+  const { firstName, lastName, email, phoneNumber, store } = req.body;
   try {
     let isUser = await User.findOne({ email: email?.toLowerCase() });
     if (isUser) {
@@ -21,6 +21,7 @@ exports.createUser = async (req, res) => {
         lastName,
         email,
         phoneNumber,
+        store,
       });
       if (response) {
         return res.status(200).json({
@@ -35,9 +36,10 @@ exports.createUser = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-  const { search, page, perPage } = req?.body;
+  const { search, page, perPage, store } = req?.body;
   try {
     const searchBy = {
+      store: `${store}`,
       $or: [
         { firstName: { $regex: search, $options: "i" } },
         { lastName: { $regex: search, $options: "i" } },
@@ -75,9 +77,9 @@ exports.getSingleUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const { firstName, lastName, email, phoneNumber, _id } = req.body;
+  const { firstName, lastName, email, phoneNumber, store, _id } = req.body;
   try {
-    const updateFields = { firstName, lastName, email, phoneNumber };
+    const updateFields = { firstName, lastName, email, phoneNumber, store };
     await User.findByIdAndUpdate(_id, updateFields).then(() => {
       return res
         .status(200)
