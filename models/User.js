@@ -20,7 +20,8 @@ const userSchema = new Schema(
       required: false,
     },
     store: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "shop",
       required: true,
     },
   },
